@@ -1,23 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
-
+import { useState, useEffect } from "react";
+import * as mobilenet from "@tensorflow-models/mobilenet";
 function App() {
+  const [isModelLoading, setisModelLoading] = useState(false);
+  const [model, setModel] = useState(null);
+  const [imageURL, setImageURL] = useState(null);
+  const loadModel = async () => {
+    setisModelLoading(true);
+    try {
+      const model = await mobilenet.load();
+      setModel(model);
+      setisModelLoading(false);
+    } catch (error) {
+      console.log(error);
+
+      setisModelLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadModel();
+  }, []);
+
+  if (isModelLoading) {
+    return <h2>Model is loading...</h2>;
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>This is an Image Identifier App</h1>
     </div>
   );
 }
