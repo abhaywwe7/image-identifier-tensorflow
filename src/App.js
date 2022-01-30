@@ -1,9 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import * as mobilenet from "@tensorflow-models/mobilenet";
 function App() {
   const [isModelLoading, setisModelLoading] = useState(false);
   const [model, setModel] = useState(null);
   const [imageURL, setImageURL] = useState(null);
+
+  const imageReference = useRef();
+
   const loadModel = async () => {
     setisModelLoading(true);
     try {
@@ -48,6 +51,21 @@ function App() {
           className="uploadInputImage"
           onChange={uploadImage}
         />
+      </div>
+      <div className="mainWrapper">
+        <div className="mainContent">
+          <div className="imageHolder">
+            {imageURL && (
+              <img
+                src={imageURL}
+                alt="upload preview"
+                crossOrigin="anonymous"
+                ref={imageReference}
+              />
+            )}
+          </div>
+        </div>
+        {imageURL && <button className="button">Identify</button>}
       </div>
     </div>
   );
